@@ -124,8 +124,8 @@ jobs:
       - name: Build image (local, for scanning)
         uses: docker/build-push-action@v6
         with:
-          context: ./${{ matrix.service }}
-          file: ./${{ matrix.service }}/Dockerfile
+          context:  ./${{ matrix.service }}
+          file:  ./${{ matrix.service }}/Dockerfile
           push: false
           load: true # make the image available to the local docker daemon
           tags: |
@@ -153,7 +153,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./${{ matrix.service }}
-          file: ./${{ matrix.service }}/Dockerfile
+          file:  ./${{ matrix.service }}/Dockerfile
           push: true
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ matrix.service }}:${{ steps.vars.outputs.sha }}
