@@ -25,42 +25,42 @@
 #     GCP_REGION       - e.g. us-central1
 #     AR_REPO          - e.g. cloudkitchen-registry
 # =============================================================================
-name: CI (GCP / Artifact Registry)
+#name: CI (GCP / Artifact Registry)
 
-on:
-  push:
-    branches: [main]
+#on:
+#  push:
+#    branches: [main]
     # Run on any service-code OR helm-chart change. Yes, a helm-only edit
     # rebuilds all 9 images even though their contents didn't change — that's
     # intentional. Keeps the pipeline a single, predictable thing.
-    paths:
-      - "auth-service/**"
-      - "user-service/**"
-      - "restaurant-service/**"
-      - "menu-service/**"
-      - "order-service/**"
-      - "payment-service/**"
-      - "delivery-service/**"
-      - "notification-service/**"
-      - "frontend/**"
-      - "helm/cloudkitchen/**"
-      - ".github/workflows/ci-gcp.yaml"
-  pull_request:
-    paths:
-      - "auth-service/**"
-      - "user-service/**"
-      - "restaurant-service/**"
-      - "menu-service/**"
-      - "order-service/**"
-      - "payment-service/**"
-      - "delivery-service/**"
-      - "notification-service/**"
-      - "frontend/**"
-      - "helm/cloudkitchen/**"
-      - ".github/workflows/ci-gcp.yaml"
+ #   paths:
+ #     - "auth-service/**"
+ #     - "user-service/**"
+ #     - "restaurant-service/**"
+ #     - "menu-service/**"
+ #     - "order-service/**"
+ #     - "payment-service/**"
+ #     - "delivery-service/**"
+ #     - "notification-service/**"
+ #     - "frontend/**"
+ #     - "helm/cloudkitchen/**"
+ #     - ".github/workflows/ci-gcp.yaml"
+ # pull_request:
+ #   paths:
+ #    - "auth-service/**"
+ #    - "user-service/**"
+ #     - "restaurant-service/**"
+ #     - "menu-service/**"
+ #     - "order-service/**"
+ #     - "payment-service/**"
+ #     - "delivery-service/**"
+ #     - "notification-service/**"
+ #     - "frontend/**"
+ #     - "helm/cloudkitchen/**"
+ #     - ".github/workflows/ci-gcp.yaml"
 
 # Cancel superseded runs on the same ref to save CI minutes.
-concurrency:
+#concurrency:
   group: ci-gcp-${{ github.ref }}
   cancel-in-progress: true
 
