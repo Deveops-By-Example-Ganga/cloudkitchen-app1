@@ -20,31 +20,33 @@ name: CI (AWS / ECR)
 # secrets are configured and the ECR repos exist (Terraform Phase 1).
 on:
   workflow_dispatch: {} # manual-only for now
-  # push:
-  #   branches: [main]
-  #   paths:
-  #     - "auth-service/**"
-  #     - "user-service/**"
-  #     - "restaurant-service/**"
-  #     - "menu-service/**"
-  #     - "order-service/**"
-  #     - "payment-service/**"
-  #     - "delivery-service/**"
-  #     - "notification-service/**"
-  #     - "frontend/**"
-  #     - ".github/workflows/ci.yaml"
-  # pull_request:
-  #   paths:
-  #     - "auth-service/**"
-  #     - "user-service/**"
-  #     - "restaurant-service/**"
-  #     - "menu-service/**"
-  #     - "order-service/**"
-  #     - "payment-service/**"
-  #     - "delivery-service/**"
-  #     - "notification-service/**"
-  #     - "frontend/**"
-  #     - ".github/workflows/ci.yaml"
+
+  push:
+    branches: [main]
+    paths:
+      - "auth-service/**"
+      - "user-service/**"
+      - "restaurant-service/**"
+      - "menu-service/**"
+      - "order-service/**"
+      - "payment-service/**"
+      - "delivery-service/**"
+      - "notification-service/**"
+      - "frontend/**"
+      - ".github/workflows/ci.yaml"
+
+  pull_request:
+    paths:
+      - "auth-service/**"
+      - "user-service/**"
+      - "restaurant-service/**"
+      - "menu-service/**"
+      - "order-service/**"
+      - "payment-service/**"
+      - "delivery-service/**"
+      - "notification-service/**"
+      - "frontend/**"
+      - ".github/workflows/ci.yaml"
 
 # Cancel superseded runs on the same ref to save CI minutes.
 concurrency:
@@ -58,7 +60,7 @@ env:
   # ECR registry host: <ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
   ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
   # All images live under the cloudkitchen/ ECR namespace.
-  IMAGE_PREFIX: cloudkitchen
+  IMAGE_PREFIX: ""
 
 jobs:
   # ===========================================================================
@@ -127,8 +129,8 @@ jobs:
           push: false
           load: true # make the image available to the local docker daemon
           tags: |
-            ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.sha }}
-            ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ matrix.service }}:${{ steps.vars.outputs.sha }}
+            ${{ env.ECR_REGISTRY }}/${{ matrix.service }}:latest
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,scope=${{ matrix.service }},mode=max
 
@@ -137,7 +139,7 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: image
-          image-ref: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.sha }}
+          image-ref: ${{ env.ECR_REGISTRY }}/${{ matrix.service }}:${{ steps.vars.outputs.sha }}
           format: table
           exit-code: "1" # non-zero exit fails the job
           severity: HIGH,CRITICAL
@@ -154,8 +156,8 @@ jobs:
           file: ./${{ matrix.service }}/Dockerfile
           push: true
           tags: |
-            ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.sha }}
-            ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ matrix.service }}:${{ steps.vars.outputs.sha }}
+            ${{ env.ECR_REGISTRY }}/${{ matrix.service }}:latest
           cache-from: type=gha,scope=${{ matrix.service }}
 
   # ===========================================================================
